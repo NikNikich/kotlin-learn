@@ -4,10 +4,10 @@ import javax.persistence.*
 
 
 @Entity
-@Table(name = "user")
+@Table()
 class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private val id: Long? = null
     @Column
     private val name: String? = null

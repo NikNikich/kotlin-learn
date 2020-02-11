@@ -1,16 +1,23 @@
-package com.example.kotlinlearn.service
+package com.example.kotlinlearn.controller
 
-import com.example.kotlinlearn.service.*
+import com.example.kotlinlearn.repository.UserRepository
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import com.example.kotlinlearn.service.UserService
+import org.springframework.beans.factory.annotation.Autowired
 
 @RestController // Сообщаем как обрабатывать http запросы и в каком виде отправлять ответы (сериализация в JSON и обратно)
 @RequestMapping("products") // Указываем префикс маршрута для всех экшенов
 //class ProductsController(private val productService: ProductService) { // Внедряем наш сервис в качестве зависимости
-class ProductsController() { // Внедряем наш сервис в качестве зависимости
+class UserController() { // Внедряем наш сервис в качестве зависимости
+    private val userService: UserService? = null
+    @Autowired
+    lateinit var repository: UserRepository
+
     @GetMapping // Говорим что экшен принимает GET запрос без параметров в url
   //  fun index() = productService.all() // И возвращает результат метода all нашего сервиса. Функциональная запись с выводом типа
-    fun index() = '1' // И возвращает результат метода all нашего сервиса. Функциональная запись с выводом типа
+    fun findAll() = (repository.findAll()) // И возвращает результат метода all нашего сервиса. Функциональная запись с выводом типа
 
     @PostMapping // Экшен принимает POST запрос без параметров в url
     @ResponseStatus(HttpStatus.CREATED) // Указываем специфический HttpStatus при успешном ответе
