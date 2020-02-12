@@ -4,15 +4,15 @@ import javax.persistence.*
 
 
 @Entity
-@Table()
+@Table(name = "user", schema = "public")
 class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private val id: Long? = null
+    @Column(unique = true)
+    public val name: String? = null
     @Column
-    private val name: String? = null
-    @Column
-    private val password: String? = null
-    @Column
-    private val email: String? = null //getters and setters
+    public val password: String? = null
+    @Column(unique = true)
+    public val email: String? = null //getters and setters
 }
