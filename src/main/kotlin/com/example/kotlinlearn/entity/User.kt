@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "user", schema = "public")
-class User {
+class User() {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private val id: Long? = null
