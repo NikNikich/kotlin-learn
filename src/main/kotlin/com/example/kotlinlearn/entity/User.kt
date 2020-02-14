@@ -1,18 +1,22 @@
 package com.example.kotlinlearn.entity
 
 import javax.persistence.*
+import javax.validation.constraints.Email
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 
 
 @Entity
 @Table(name = "user", schema = "public")
-class User() {
+class User(
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private val id: Long? = null
     @Column(unique = true)
-    public val name: String? = null
+     var name: String? = null
     @Column
-    public val password: String? = null
+    var password: String? = null
     @Column(unique = true)
-    public val email: String? = null //getters and setters
+    var email: String? = null //getters and setters
 }

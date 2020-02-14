@@ -9,4 +9,5 @@ import java.util.*
 
 interface UserRepository : CrudRepository<User?, Long?> {
     fun findByName(name: String?):Optional<User?>?
+    abstract fun findByNameOrEmail(name: String, email: String): List<User?>
 }

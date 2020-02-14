@@ -1,11 +1,13 @@
 package com.example.kotlinlearn.service
 
+import com.example.kotlinlearn.controller.UserDTO
 import com.example.kotlinlearn.entity.User
 import com.example.kotlinlearn.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.validation.Valid
 
 
 @Service
@@ -21,9 +23,14 @@ open class UserService {
         println("Сервис один юзверь")
         return repository.findById(id)
     }
-    fun newUser(user:User):  Iterable<User?> {
+    fun newUser(user:UserDTO):  Any {
         println("Сервис новый юзверь")
-        return repository.findAll().toList()
+        val  userNew=User()
+        userNew.name=user.name
+        userNew.email=user.email
+        userNew.password=user.password
+
+        return repository.save(userNew)
     }
     fun renameUser(user:User):  Iterable<User?> {
         println("Сервис изменить юзверя")

@@ -8,8 +8,8 @@ class ValidateUser {
     fun UserAdd(obj: Any):Any {
         val userValid: User = obj as User
         if (userValid.name!!.isNotEmpty()&&userValid.email!!.isNotEmpty()&&userValid.password!!.isNotEmpty()){
-            if(userValid.name.length<4||userValid.name.length>200) return "Name >4 and < 200"
-            if(userValid.email.length<4||userValid.email.length>200) return "Email >4 and < 400"
+            if((userValid.name as String).length<4||(userValid.name as String).length>200) return "Name >4 and < 200"
+            if((userValid.email as String).length<4||(userValid.email as String).length>200) return "Email >4 and < 400"
         } else return false
         return -1
     }
