@@ -40,9 +40,22 @@ import javax.validation.Valid
     //fun read(@PathVariable id: Long) = productService.get(id) // Сообщаем что наш id типа Long и передаем его в метод get сервиса
     fun read(@PathVariable id: Long) =if (!userService.findOneUser(id).isEmpty) ResponseEntity.ok(userService.findOneUser(id))  else "noContent" // Сообщаем что наш id типа Long и передаем его в метод get сервиса
 
-  /*  @PutMapping("{id}")
-    fun update(@PathVariable id: Long, @RequestBody product: Product) = productService.edit(id, product) // Здесь мы принимаем один параметр из url, второй из тела PUT запроса и отдаем их методу edit
+    @PutMapping("{id}")
+    fun update( @PathVariable id: Long,@RequestBody @Valid user: UserDTO) :Any {
+        val findUserNameOrEmail=repository.findByNameOrEmailAndIdNot(user.name,user.email,id)
 
+        if(findUserNameOrEmail.isNotEmpty()){
+            ResponseEntity.status(HttpStatus.IM_USED)
+            return ResponseEntity.status(HttpStatus.IM_USED)
+                    .body("Double element " );
+        }
+        else return userService.renameUser(id,user)
+    }
     @DeleteMapping("{id}")
-    fun delete(@PathVariable id: Long) = productService.remove(id)*/
+    fun delete(@PathVariable id: Long):Any  {
+         if (repository.findById(id).isEmpty) {
+             println("Not found")
+             return ResponseEntity.notFound()
+         } else return userService.deleteUser(id)
+    }
 }

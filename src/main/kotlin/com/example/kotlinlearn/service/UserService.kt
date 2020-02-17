@@ -4,10 +4,9 @@ import com.example.kotlinlearn.controller.UserDTO
 import com.example.kotlinlearn.entity.User
 import com.example.kotlinlearn.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.util.*
-import javax.validation.Valid
 
 
 @Service
@@ -32,13 +31,22 @@ open class UserService {
 
         return repository.save(userNew)
     }
-    fun renameUser(user:User):  Iterable<User?> {
+    fun renameUser(id:Long,user:UserDTO):  Any {
         println("Сервис изменить юзверя")
-        return repository.findAll().toList()
+        val userFind=repository.findById(id)
+        if (userFind.isEmpty) return ResponseEntity.notFound()
+         else {
+            val userFindSave=userFind.get()
+            userFindSave.name=user.name
+            userFindSave.email=user.email
+            userFindSave.password=user.password
+
+            return repository.save(userFindSave)
+        }
     }
-    fun deleteUser(int: Long):  Iterable<Any?> {
+    fun deleteUser(id: Long):  Iterable<Any?> {
         println("Сервис удалить юзверя")
-        return repository.findAll().toList()
+        return listOf(repository.deleteById(id))
     }
     //fun findUsers()= repository.findAll().toList()
 }
