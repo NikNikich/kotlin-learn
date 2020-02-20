@@ -10,6 +10,7 @@ import com.example.kotlinlearn.entity.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import javax.validation.Valid
+import com.example.kotlinlearn.service.JwtService
 
 @RestController // Сообщаем как обрабатывать http запросы и в каком виде отправлять ответы (сериализация в JSON и обратно)
 @RequestMapping("products") // Указываем префикс маршрута для всех экшенов
@@ -19,6 +20,8 @@ import javax.validation.Valid
     lateinit var userService: UserService
     @Autowired
     lateinit var repository: UserRepository
+    @Autowired
+    lateinit var jwtService: JwtService
 
     @GetMapping // Говорим что экшен принимает GET запрос без параметров в url
   //  fun index() = productService.all() // И возвращает результат метода all нашего сервиса. Функциональная запись с выводом типа
@@ -42,6 +45,10 @@ import javax.validation.Valid
 
     @PutMapping("{id}")
     fun update( @PathVariable id: Long,@RequestBody @Valid user: UserDTO) :Any {
+        var jwtId=jwtService.create(id,"secret")
+        println("jwt");
+        println(jwtId);
+        println(jwtService.verify(jwtId));
         val findUserNameOrEmail=repository.findByNameOrEmailAndIdNot(user.name,user.email,id)
 
         if(findUserNameOrEmail.isNotEmpty()){

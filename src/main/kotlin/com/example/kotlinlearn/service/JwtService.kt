@@ -7,13 +7,14 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.DecodedJWT
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.time.temporal.TemporalUnit
 import java.util.*
 
-@Component
+@Service
 class JwtService() {
     private val algorithm: Algorithm=Algorithm.HMAC256("KuKaReKu")
-    fun create(role: String?, id: Long?, secret: String?): String {
+    fun create( id: Long?, secret: String?): String {
         return JWT.create().withClaim(ID_CLAIM, id)
                 .withClaim(SECRET_CLAIM, secret).sign(algorithm)
     }
@@ -22,9 +23,6 @@ class JwtService() {
         return JWT.require(algorithm).build().verify(jwt)
     }
 
-    fun expireAfter(expireAfter: Long, unit: TemporalUnit?): Date {
-        return Date.from(Date().toInstant().plus(expireAfter, unit))
-    }
 
     companion object {
         const val ROLE_CLAIM = "ROLE"
