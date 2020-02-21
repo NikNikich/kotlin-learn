@@ -47,8 +47,10 @@ import com.example.kotlinlearn.service.JwtService
     fun update( @PathVariable id: Long,@RequestBody @Valid user: UserDTO) :Any {
         var jwtId=jwtService.create(id,"secret")
         println("jwt");
+        println(id);
         println(jwtId);
-        println(jwtService.verify(jwtId));
+       // println(jwtService.verify(jwtId));
+        return jwtService.verify(jwtId)
         val findUserNameOrEmail=repository.findByNameOrEmailAndIdNot(user.name,user.email,id)
 
         if(findUserNameOrEmail.isNotEmpty()){

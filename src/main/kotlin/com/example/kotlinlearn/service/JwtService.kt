@@ -2,25 +2,36 @@ package com.example.kotlinlearn.service
 
 
 //import java.time.temporal.TemporalUnit
-import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.auth0.jwt.interfaces.DecodedJWT
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
+import io.jsonwebtoken.JwsHeader
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.impl.crypto.MacProvider
 import org.springframework.stereotype.Service
-import java.time.temporal.TemporalUnit
-import java.util.*
+import java.security.Key
+import javax.crypto.SecretKey
+
 
 @Service
 class JwtService() {
     private val algorithm: Algorithm=Algorithm.HMAC256("KuKaReKu")
+    var key: Key = MacProvider.generateKey()
+
     fun create( id: Long?, secret: String?): String {
-        return JWT.create().withClaim(ID_CLAIM, id)
-                .withClaim(SECRET_CLAIM, secret).sign(algorithm)
+        //  return JWT.create().withClaim(ID_CLAIM, id)
+        //        .withClaim(SECRET_CLAIM, secret).sign(algorithm)
+
+        return Jwts.builder()
+                .setSubject(id.toString())
+                .setHeaderParam(JwsHeader.KEY_ID, id) // 1
+                .signWith(SignatureAlgorithm.HS512, key)
+                .compact();
     }
 
-    fun verify(jwt: String?): DecodedJWT {
-        return JWT.require(algorithm).build().verify(jwt)
+    fun verify(jwt: String?): Any {
+       return Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
+
+        //return  JWT.decode("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJJRCI6NzIsIlNFQ1JFVCI6InNlY3JldCJ9.6Cvl29soz9IIsroefM8tBa-F6s0oTIW-a1xmBlBpnw0").algorithm
     }
 
 
