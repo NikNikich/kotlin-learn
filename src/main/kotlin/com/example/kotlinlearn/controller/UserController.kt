@@ -44,27 +44,48 @@ import com.example.kotlinlearn.service.JwtService
     fun read(@PathVariable id: Long) =if (!userService.findOneUser(id).isEmpty) ResponseEntity.ok(userService.findOneUser(id))  else "noContent" // Сообщаем что наш id типа Long и передаем его в метод get сервиса
 
     @PutMapping("{id}")
-    fun update( @PathVariable id: Long,@RequestBody @Valid user: UserDTO) :Any {
+    fun update( @PathVariable id: Long,@RequestBody @Valid user: UserDTO,@RequestHeader myToken:String) :Any? {
         var jwtId=jwtService.create(id,"secret")
-        println("jwt");
-        println(id);
-        println(jwtId);
-       // println(jwtService.verify(jwtId));
-        return jwtService.verify(jwtId)
-        val findUserNameOrEmail=repository.findByNameOrEmailAndIdNot(user.name,user.email,id)
+        println("jwt")
+        println(myToken)
+      //  println(id)
+       println(jwtId)
+       // println(myToken);
+        println(jwtService.verify(myToken as String ));
 
-        if(findUserNameOrEmail.isNotEmpty()){
-            ResponseEntity.status(HttpStatus.IM_USED)
-            return ResponseEntity.status(HttpStatus.IM_USED)
-                    .body("Double element " );
+        //return jwtService.verify(jwtId)
+        if (userService.checkUserId(myToken as String, id)) {
+            val findUserNameOrEmail = repository.findByNameOrEmailAndIdNot(user.name, user.email, id)
+            if (findUserNameOrEmail.isNotEmpty()) {
+                ResponseEntity.status(HttpStatus.IM_USED)
+                return ResponseEntity.status(HttpStatus.IM_USED)
+                        .body("Double element ");
+            } else return userService.renameUser(id, user)
         }
-        else return userService.renameUser(id,user)
+        return ResponseEntity.status(HttpStatus.IM_USED)
+                .body("Not Correctly Token or Id ");
     }
     @DeleteMapping("{id}")
-    fun delete(@PathVariable id: Long):Any  {
-         if (repository.findById(id).isEmpty) {
+    fun delete(@PathVariable id: Long,@RequestHeader myToken:String):Any  {
+        if (userService.checkUserId(myToken, id)) {
+            return userService.deleteUser(id)
+        }
+        return ResponseEntity.status(HttpStatus.IM_USED)
+                .body("Not Correctly Token or Id ");
+        /* if (repository.findById(id).isEmpty) {
              println("Not found")
              return ResponseEntity.notFound()
-         } else return userService.deleteUser(id)
+         } else return userService.deleteUser(id)*/
+    }
+    @GetMapping("/sign")
+    fun autorization(@RequestBody @Valid user: UserSignDTO):Any?  {
+       /* if (userService.checkUserId(myToken, id)) {
+            return userService.deleteUser(id)
+        }*/
+        return userService.autorization(user);
+        /* if (repository.findById(id).isEmpty) {
+             println("Not found")
+             return ResponseEntity.notFound()
+         } else return userService.deleteUser(id)*/
     }
 }
